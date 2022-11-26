@@ -1,14 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon2022/constants/colors.dart';
+import 'package:hackathon2022/firebase_options.dart';
 import 'package:hackathon2022/views/main_home/main_home_page.dart';
-import 'package:hackathon2022/views/screens/page_2.dart';
-import 'package:hackathon2022/views/screens/page_3.dart';
+import 'package:hackathon2022/views/screens/authentication/signIn.dart';
 import 'package:iconsax/iconsax.dart';
 
 import 'views/widgets/FABBottomBarNavigation.dart';
-
 import 'dart:ffi';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -17,7 +16,9 @@ import 'speech_text_recognizer.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
-void main() {
+await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+
       home: MyHomePage(
         title: 'hi',
       ),
@@ -108,6 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
   playAudio(item) {
     audioPlayer.play(item);
   }
+
 
   _checkSpeechAvailability() async {
     isEnabled = await SpeechTextRecognizer.initialize();
@@ -198,6 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: GestureDetector(
+
         onTap: () {
           SpeechTextRecognizer.isListning()
               ? SpeechTextRecognizer.stopListning
