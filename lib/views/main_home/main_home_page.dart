@@ -4,7 +4,6 @@ import 'package:hackathon2022/constants/colors.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../constants/images.dart';
-import 'widget/weather_card.dart';
 
 class MainHomePage extends StatefulWidget {
   const MainHomePage({super.key});
@@ -104,14 +103,62 @@ class _MainHomePageState extends State<MainHomePage> {
                     ),
                   ],
                 ),
-                bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(65.0),
-                  child: Container(
-                    height: 70,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.redAccent,
-                  ),
-                ),
+                // bottom: PreferredSize(
+                //   preferredSize: Size.fromHeight(42.0),
+                //   child: Column(
+                //     mainAxisSize: MainAxisSize.min,
+                //     children: [
+                //       Row(
+                //         children: [
+                //           Padding(
+                //             padding: const EdgeInsets.only(left: 16, right: 9, bottom: 16),
+                //             child: InkWellWrapper(
+                //               onTap: () => showFilterBottomSheet(),
+                //               child: Assets.images.svg.icFilter.svg(height: 34, width: 34),
+                //             ),
+                //           ),
+                //           Expanded(
+                //             child: Padding(
+                //               padding: const EdgeInsets.only(bottom: 16),
+                //               child: StreamBuilder<int>(
+                //                   stream: selectedTypeFilter,
+                //                   builder: (context, snapshot) {
+                //                     return Container(
+                //                       height: 33,
+                //                       child: ListView.separated(
+                //                         padding: EdgeInsets.only(right: 16),
+                //                         scrollDirection: Axis.horizontal,
+                //                         itemBuilder: (BuildContext context, int index) {
+                //                           return FilterCard(
+                //                             filterItem: AppConstants().filterItem[index],
+                //                             onSelected: (bool value) {
+                //                               if (value) {
+                //                                 selectedItem.add(AppConstants().filterItem[index]);
+                //                               } else {
+                //                                 selectedItem.removeWhere(
+                //                                         (element) => element == AppConstants().filterItem[index]);
+                //                               }
+                //
+                //                             },
+                //                           );
+                //                         },
+                //                         separatorBuilder: (BuildContext context, int index) {
+                //                           return SizedBox(
+                //                             width: 16,
+                //                           );
+                //                         },
+                //                         itemCount: AppConstants().filterItem.length,
+                //                       ),
+                //                     );
+                //                   }),
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //
+                //     ],
+                //   ), // Add this code
+                // ),
                 flexibleSpace: FlexibleSpaceBar(
                   background: Stack(
                     children: <Widget>[
