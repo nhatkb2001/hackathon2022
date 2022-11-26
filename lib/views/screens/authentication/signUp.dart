@@ -208,7 +208,7 @@ class _signUpPageState extends State<signupScreen> with InputValidationMixin {
                                           borderRadius:
                                               BorderRadius.circular(10.0),
                                         ),
-                                        errorStyle: TextStyle(
+                                        errorStyle: const TextStyle(
                                           color: Colors.transparent,
                                           fontSize: 0,
                                           height: 0,
