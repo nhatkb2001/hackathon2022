@@ -6,7 +6,6 @@ import 'package:hackathon2022/views/screens/page_3.dart';
 import 'package:iconsax/iconsax.dart';
 
 import 'views/widgets/FABBottomBarNavigation.dart';
-import 'package:alan_voice/alan_voice.dart';
 
 import 'dart:ffi';
 
