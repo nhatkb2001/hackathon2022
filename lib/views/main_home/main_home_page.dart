@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hackathon2022/constants/colors.dart';
+import 'package:hackathon2022/views/main_home/widget/news_widget.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../constants.dart';
 import '../../constants/images.dart';
+import '../../widget/inkwell_wrapper.dart';
+import 'widget/filtter_card.dart';
 
 class MainHomePage extends StatefulWidget {
   const MainHomePage({super.key});
@@ -14,6 +19,7 @@ class MainHomePage extends StatefulWidget {
 
 class _MainHomePageState extends State<MainHomePage> {
   final ScrollController controller = ScrollController();
+  List<String> selectedItem = [];
 
   @override
   Widget build(BuildContext context) {
@@ -103,62 +109,56 @@ class _MainHomePageState extends State<MainHomePage> {
                     ),
                   ],
                 ),
-                // bottom: PreferredSize(
-                //   preferredSize: Size.fromHeight(42.0),
-                //   child: Column(
-                //     mainAxisSize: MainAxisSize.min,
-                //     children: [
-                //       Row(
-                //         children: [
-                //           Padding(
-                //             padding: const EdgeInsets.only(left: 16, right: 9, bottom: 16),
-                //             child: InkWellWrapper(
-                //               onTap: () => showFilterBottomSheet(),
-                //               child: Assets.images.svg.icFilter.svg(height: 34, width: 34),
-                //             ),
-                //           ),
-                //           Expanded(
-                //             child: Padding(
-                //               padding: const EdgeInsets.only(bottom: 16),
-                //               child: StreamBuilder<int>(
-                //                   stream: selectedTypeFilter,
-                //                   builder: (context, snapshot) {
-                //                     return Container(
-                //                       height: 33,
-                //                       child: ListView.separated(
-                //                         padding: EdgeInsets.only(right: 16),
-                //                         scrollDirection: Axis.horizontal,
-                //                         itemBuilder: (BuildContext context, int index) {
-                //                           return FilterCard(
-                //                             filterItem: AppConstants().filterItem[index],
-                //                             onSelected: (bool value) {
-                //                               if (value) {
-                //                                 selectedItem.add(AppConstants().filterItem[index]);
-                //                               } else {
-                //                                 selectedItem.removeWhere(
-                //                                         (element) => element == AppConstants().filterItem[index]);
-                //                               }
-                //
-                //                             },
-                //                           );
-                //                         },
-                //                         separatorBuilder: (BuildContext context, int index) {
-                //                           return SizedBox(
-                //                             width: 16,
-                //                           );
-                //                         },
-                //                         itemCount: AppConstants().filterItem.length,
-                //                       ),
-                //                     );
-                //                   }),
-                //             ),
-                //           ),
-                //         ],
-                //       ),
-                //
-                //     ],
-                //   ), // Add this code
-                // ),
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(42.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        color: AppColors.white,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16, right: 9, bottom: 16),
+                              child: SvgPicture.asset(VectorImageAssets.filter_svg),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 16),
+                                child: Container(
+                                  height: 33,
+                                  child: ListView.separated(
+                                    padding: EdgeInsets.only(right: 16),
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      return FilterCard(
+                                        filterItem: AppConstants().filterItem[index],
+                                        onSelected: (bool value) {
+                                          if (value) {
+                                            selectedItem.add(AppConstants().filterItem[index]);
+                                          } else {
+                                            selectedItem
+                                                .removeWhere((element) => element == AppConstants().filterItem[index]);
+                                          }
+                                        },
+                                      );
+                                    },
+                                    separatorBuilder: (BuildContext context, int index) {
+                                      return SizedBox(
+                                        width: 16,
+                                      );
+                                    },
+                                    itemCount: AppConstants().filterItem.length,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ), // Add this code
+                ),
                 flexibleSpace: FlexibleSpaceBar(
                   background: Stack(
                     children: <Widget>[
@@ -235,7 +235,7 @@ class _MainHomePageState extends State<MainHomePage> {
                                                   ),
                                                 ),
                                                 child: Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 8,vertical:10 ),
+                                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
                                                   child: Row(
                                                     children: [
                                                       Text(
@@ -248,7 +248,9 @@ class _MainHomePageState extends State<MainHomePage> {
                                                           fontStyle: FontStyle.normal,
                                                         ),
                                                       ),
-                                                      SizedBox(width: 12,),
+                                                      SizedBox(
+                                                        width: 12,
+                                                      ),
                                                       Text(
                                                         '28 C',
                                                         style: TextStyle(
@@ -270,7 +272,9 @@ class _MainHomePageState extends State<MainHomePage> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 16,),
+                                SizedBox(
+                                  width: 16,
+                                ),
                                 Flexible(
                                   flex: 1,
                                   child: Container(
@@ -294,11 +298,10 @@ class _MainHomePageState extends State<MainHomePage> {
                                           Text(
                                             "Oxygen",
                                             style: TextStyle(
-                                              fontSize: 16,
-                                              height: 16 / 12,
-                                              fontWeight: FontWeight.w600,
-                                              color: AppColors.white
-                                            ),
+                                                fontSize: 16,
+                                                height: 16 / 12,
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.white),
                                           ),
                                           SizedBox(
                                             height: 12,
@@ -306,7 +309,6 @@ class _MainHomePageState extends State<MainHomePage> {
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-
                                               Container(
                                                 decoration: BoxDecoration(
                                                     color: AppColors.white,
@@ -321,7 +323,10 @@ class _MainHomePageState extends State<MainHomePage> {
                                                 height: 36,
                                                 width: 36,
                                                 child: Center(
-                                                  child: Icon(Iconsax.bubble,color: AppColors.green,),
+                                                  child: Icon(
+                                                    Iconsax.bubble,
+                                                    color: AppColors.green,
+                                                  ),
                                                 ),
                                               ),
                                               SizedBox(
@@ -336,7 +341,7 @@ class _MainHomePageState extends State<MainHomePage> {
                                                   ),
                                                 ),
                                                 child: Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 8,vertical:10 ),
+                                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
                                                   child: Container(
                                                     width: 76,
                                                     child: Center(
@@ -371,12 +376,54 @@ class _MainHomePageState extends State<MainHomePage> {
                   ),
                 ),
               ),
+
+              /// after appbar
               SliverToBoxAdapter(
-                child: Container(
-                  height: 900,
-                  color: Colors.deepOrange,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 28,
+                        width: 2,
+                        color: AppColors.green,
+                      ),
+                      SizedBox(
+                        width: 6,
+                      ),
+                      Expanded(
+                        child: Text(
+                          "Latest News",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            height: 28 / 20,
+                            fontFamily: 'SVN-Poppins',
+                            fontStyle: FontStyle.normal,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              )
+              ),
+              SliverToBoxAdapter(
+                child: ListView.separated(
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return NewsWidget();
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(
+                      height: 16,
+                    );
+                  },
+                  itemCount: 8,
+                ),
+              ),
+
             ],
           ),
         ],
