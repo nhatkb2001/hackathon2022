@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon2022/constants/colors.dart';
 import 'package:hackathon2022/views/main_home/main_home_page.dart';
+import 'package:hackathon2022/views/screens/page_2.dart';
+import 'package:hackathon2022/views/screens/page_3.dart';
 import 'package:iconsax/iconsax.dart';
 
 import 'views/widgets/FABBottomBarNavigation.dart';
