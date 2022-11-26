@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon2022/constants/colors.dart';
+import 'package:iconsax/iconsax.dart';
+
+import 'views/widgets/FABBottomBarNavigation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,8 +42,23 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  String _lastSelected = 'TAB: 0';
+
+  void _selectedTab(int index) {
+    setState(() {
+      _lastSelected = 'TAB: $index';
+    });
+  }
+
+  void _selectedFab(int index) {
+    setState(() {
+      _lastSelected = 'FAB: $index';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    int _selectedTab = 0;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -62,7 +81,20 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+      bottomNavigationBar: FABBottomAppBar(
+        onTabSelected: _selectedFab,
+        items: [
+          FABBottomAppBarItem(iconData: Iconsax.home, text: 'Home'),
+          FABBottomAppBarItem(iconData: Iconsax.flag_2, text: 'Campaign'),
+          FABBottomAppBarItem(iconData: Iconsax.cup, text: 'Challenge'),
+          FABBottomAppBarItem(iconData: Iconsax.user, text: 'Account'),
+        ],
+        backgroundColor: AppColors.white,
+        color: AppColors.black,
+        notchedShape: const CircularNotchedRectangle(),
+        selectedColor: AppColors.alt700,
+      ),
     );
   }
 }
