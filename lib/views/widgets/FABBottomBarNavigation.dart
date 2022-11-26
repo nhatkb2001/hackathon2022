@@ -53,8 +53,9 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
   }) {
     Color color = _selectedIndex == index ? widget.selectedColor : widget.color;
     return Expanded(
-      child: SizedBox(
-        height: 40,
+      child: Container(
+        width: 56,
+        height: 70,
         child: Material(
           type: MaterialType.transparency,
           child: InkWell(
@@ -88,10 +89,20 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
     items.insert(items.length >> 1, _buildMiddleTabItem());
     return BottomAppBar(
       shape: widget.notchedShape,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: items,
+      child: Container(
+        height: 80,
+        width: 375,
+        decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(32),
+                topRight: Radius.circular(32),
+                bottomLeft: Radius.circular(22),
+                bottomRight: Radius.circular(22))),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: items,
+        ),
       ),
       color: widget.backgroundColor,
     );

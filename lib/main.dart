@@ -4,6 +4,7 @@ import 'package:hackathon2022/views/main_home/main_home_page.dart';
 import 'package:iconsax/iconsax.dart';
 
 import 'views/widgets/FABBottomBarNavigation.dart';
+import 'package:alan_voice/alan_voice.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,11 +38,50 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  _MyHomePageState() {
+    _initAlanButton();
+  }
+  void _initAlanButton() {
+    AlanVoice.addButton(
+        "f9f23d68d7018705d0f0fb27ee575e8a2e956eca572e1d8b807a3e2338fdd0dc/stage",
+        buttonAlign: AlanVoice.BUTTON_ALIGN_RIGHT,
+        bottomMargin: 10);
+    AlanVoice.onCommand.add((command) {
+      var commandName = command.data["commands"] ?? "";
+      switch (commandName) {
+        case 'home':
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: ((context) => Page_2())));
+          _incrementCounter();
+          break;
+        case 'notification':
+          Navigator.push(
+              context, MaterialPageRoute(builder: ((context) => Page_3())));
+          break;
+      }
+      if (commandName == "home") {
+        Navigator.push(
+            context, MaterialPageRoute(builder: ((context) => Page_2())));
+      }
+    });
+
+    AlanVoice.onEvent.add((event) {
+      debugPrint("got new event ${event.data.toString()}");
+    });
+
+    AlanVoice.onButtonState.add((state) {
+      debugPrint("got new button state ${state.name}");
+    });
+  }
 
   void _incrementCounter() {
     setState(() {
       _counter++;
     });
+  }
+
+  void _activate() {
+    AlanVoice.activate();
   }
 
   String _lastSelected = 'TAB: 0';
@@ -60,11 +100,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    int _selectedTab = 0;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -79,10 +119,20 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      floatingActionButton: GestureDetector(
+        onTap: () {
+          _activate();
+        },
+        child: Container(
+          height: 55,
+          width: 55,
+          decoration: const BoxDecoration(
+            color: AppColors.alt700,
+            shape: BoxShape.circle,
+          ),
+          child:
+              const Icon(Iconsax.emoji_happy, color: AppColors.white, size: 24),
+        ),
       ),
       bottomNavigationBar: FABBottomAppBar(
         onTabSelected: _selectedFab,
@@ -93,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
           FABBottomAppBarItem(iconData: Iconsax.user, text: 'Account'),
         ],
         backgroundColor: AppColors.white,
-        color: AppColors.black,
+        color: AppColors.grey900,
         notchedShape: const CircularNotchedRectangle(),
         selectedColor: AppColors.alt700,
       ),
