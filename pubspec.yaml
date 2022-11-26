@@ -14,6 +14,8 @@ dependencies:
   iconsax: ^0.0.8
   alan_voice: ^3.10.0
   flutter_svg: ^1.1.5
+  speech_to_text: ^6.1.0
+  audioplayers: ^0.20.1
 
 dev_dependencies:
   flutter_test:

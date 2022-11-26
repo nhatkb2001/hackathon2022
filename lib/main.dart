@@ -8,6 +8,16 @@ import 'package:iconsax/iconsax.dart';
 import 'views/widgets/FABBottomBarNavigation.dart';
 import 'package:alan_voice/alan_voice.dart';
 
+import 'dart:ffi';
+
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'speech_text_recognizer.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -55,6 +65,120 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  String recognizedText = "Recognize text is";
+  bool isEnabled = false;
+
+  List<String> keyWords = [
+    'hello',
+    'hi',
+    'morning',
+    'afternoon',
+    'night',
+    'home',
+    'campaign',
+    'challenge',
+    'weather',
+    'oxygen',
+    'news',
+    'reward',
+    'point',
+    'are you',
+    'your name',
+    'environment'
+  ];
+  List<String> audioUrls = [
+    'https://audio.jukehost.co.uk/lh0kVoUpY0f5BYWG0HPL780i4I80gzpd', // Hello
+    'https://audio.jukehost.co.uk/gn3vIz1e8L3df2Yj0ryhmYq1XKxRqmfo', // Command
+    'https://audio.jukehost.co.uk/FZ3uuu1psGYf3Lq2aZNAuXSM8khETFgM', // Null
+    'https://audio.jukehost.co.uk/6uTRQP9fxXk02a4krGheheyMgOX68Nxp', // Weather, oxygen
+    'https://audio.jukehost.co.uk/40lDo8Bx3Chcfv1kIyDbZmarwD8WLWua', // News
+    'https://audio.jukehost.co.uk/DFgm5v8jW3Cfi79qNheQxb1UBHw70gDl', // Reward
+    'https://audio.jukehost.co.uk/jGna2HrVKx3uni24QdJWRcEwtXlU7Dhl', // Who are you?
+    'https://audio.jukehost.co.uk/H5viVFxquTm1E8reawdDu9m3WZlHR3Kv', // Environment
+  ];
+
+  final audioPlayer = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkSpeechAvailability();
+  }
+
+  playAudio(item) {
+    audioPlayer.play(item);
+  }
+
+  _checkSpeechAvailability() async {
+    isEnabled = await SpeechTextRecognizer.initialize();
+    setState(() {});
+  }
+
+  _recognizedText() {
+    SpeechTextRecognizer.startListning(speechRecogListner);
+  }
+
+  void speechRecogListner(SpeechRecognitionResult result) {
+    print(result.recognizedWords);
+    //keyword value
+    recognizedText = result.recognizedWords;
+    String thisKeyWord = '';
+    for (int i = 0; i < keyWords.length; i++) {
+      if (recognizedText.toLowerCase().contains(keyWords[i])) {
+        thisKeyWord = keyWords[i];
+        break;
+      }
+    }
+    if (result.finalResult == true) {
+      switch (thisKeyWord) {
+        case 'hi':
+        case 'hello':
+        case 'morning':
+        case 'afternoon':
+        case 'night':
+          playAudio(audioUrls[0]);
+          break;
+        case 'home':
+          playAudio(audioUrls[1]);
+          //pushtoHome
+          break;
+        case 'campaign':
+          playAudio(audioUrls[1]);
+          //pushtoCampaign
+          break;
+        case 'challenge':
+          playAudio(audioUrls[1]);
+          //pushtoChallenge
+          break;
+        case 'weather':
+        case 'oxygen':
+          playAudio(audioUrls[3]);
+          //pushtoHome
+          break;
+        case 'news':
+          playAudio(audioUrls[4]);
+          //pushtoHome
+          break;
+        case 'point':
+        case 'reward':
+          playAudio(audioUrls[5]);
+          //pushtoChallenge
+          break;
+        case 'are you':
+        case 'your name':
+          playAudio(audioUrls[6]);
+          break;
+        case 'environment':
+          playAudio(audioUrls[7]);
+          break;
+        default:
+          playAudio(audioUrls[2]);
+          break;
+      }
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +197,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          SpeechTextRecognizer.isListning()
+              ? SpeechTextRecognizer.stopListning
+              : _recognizedText();
+        },
         child: Container(
           height: 55,
           width: 55,
