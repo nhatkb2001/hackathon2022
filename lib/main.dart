@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon2022/constants/colors.dart';
-import 'package:hackathon2022/views/screens/page_2.dart';
-import 'package:hackathon2022/views/screens/page_3.dart';
+import 'package:hackathon2022/views/screens/speech_text.dart';
+import 'package:hackathon2022/views/screens/speech_text_recognizer.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 import 'views/widgets/FABBottomBarNavigation.dart';
 import 'package:alan_voice/alan_voice.dart';
@@ -23,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: SpeechText(),
     );
   }
 }
@@ -38,60 +40,40 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  _MyHomePageState() {
-    _initAlanButton();
-  }
-  void _initAlanButton() {
-    AlanVoice.addButton(
-        "f9f23d68d7018705d0f0fb27ee575e8a2e956eca572e1d8b807a3e2338fdd0dc/stage",
-        buttonAlign: AlanVoice.BUTTON_ALIGN_RIGHT,
-        bottomMargin: 10);
-    AlanVoice.onCommand.add((command) {
-      var commandName = command.data["commands"] ?? "";
-      switch (commandName) {
-        case 'home':
-          // Navigator.push(
-          //     context, MaterialPageRoute(builder: ((context) => Page_2())));
-          _incrementCounter();
-          break;
-        case 'notification':
-          Navigator.push(
-              context, MaterialPageRoute(builder: ((context) => Page_3())));
-          break;
-      }
-      if (commandName == "home") {
-        Navigator.push(
-            context, MaterialPageRoute(builder: ((context) => Page_2())));
-      }
-    });
+  SpeechToText _speechToText = SpeechToText();
+  bool _speechEnabled = false;
+  String _lastWords = '';
 
-    AlanVoice.onEvent.add((event) {
-      debugPrint("got new event ${event.data.toString()}");
-    });
-
-    AlanVoice.onButtonState.add((state) {
-      debugPrint("got new button state ${state.name}");
-    });
+  @override
+  void initState() {
+    super.initState();
+    _initSpeech();
   }
 
-  void _incrementCounter() {
+  /// This has to happen only once per app
+  void _initSpeech() async {
+    _speechEnabled = await _speechToText.initialize();
+    setState(() {});
+  }
+
+  /// Each time to start a speech recognition session
+  void _startListening() async {
+    await _speechToText.listen(onResult: _onSpeechResult);
+    setState(() {});
+  }
+
+  void _stopListening() async {
+    await _speechToText.stop();
+    setState(() {});
+  }
+
+  void _onSpeechResult(SpeechRecognitionResult result) {
     setState(() {
-      _counter++;
+      _lastWords = result.recognizedWords;
     });
-  }
-
-  void _activate() {
-    AlanVoice.activate();
   }
 
   String _lastSelected = 'TAB: 0';
-
-  void _selectedTab(int index) {
-    setState(() {
-      _lastSelected = 'TAB: $index';
-    });
-  }
 
   void _selectedFab(int index) {
     setState(() {
@@ -110,19 +92,19 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              _speechToText.isListening
+                  ? '$_lastWords'
+                  : _speechEnabled
+                      ? 'Tap the microphone to start listening...'
+                      : 'Speech not available',
             ),
           ],
         ),
       ),
       floatingActionButton: GestureDetector(
         onTap: () {
-          _activate();
+          _speechToText.isNotListening ? _startListening : _stopListening;
         },
         child: Container(
           height: 55,
