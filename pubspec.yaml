@@ -11,11 +11,14 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
+  iconsax: ^0.0.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^1.0.0
+  flutter_svg: ^1.1.5
+  
 flutter:
   uses-material-design: true
   fonts:
@@ -26,19 +29,19 @@ flutter:
           weight: 100
         - asset: assets/fonts/poppins/SVN-Poppins-Regular.ttf
           style: normal
-          weight: 200
+          weight: 400
         - asset: assets/fonts/poppins/SVN-Poppins-Medium.ttf
           style: normal
-          weight: 300
+          weight: 500
         - asset: assets/fonts/poppins/SVN-Poppins-SemiBold.ttf
           style: normal
-          weight: 400
+          weight: 600
         - asset: assets/fonts/poppins/SVN-Poppins-Bold.ttf
           style: normal
-          weight: 500
+          weight: 700
         - asset: assets/fonts/poppins/SVN-Poppins-Black.ttf
           style: normal
-          weight: 600
+          weight: 800
         
  
 
