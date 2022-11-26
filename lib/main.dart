@@ -1,14 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon2022/constants/colors.dart';
+import 'package:hackathon2022/firebase_options.dart';
 import 'package:hackathon2022/views/main_home/main_home_page.dart';
-import 'package:hackathon2022/views/screens/page_2.dart';
-import 'package:hackathon2022/views/screens/page_3.dart';
+import 'package:hackathon2022/views/screens/authentication/signIn.dart';
 import 'package:iconsax/iconsax.dart';
 
 import 'views/widgets/FABBottomBarNavigation.dart';
 import 'package:alan_voice/alan_voice.dart';
 
-void main() {
+void main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -24,7 +28,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MainHomePage(),
+      home: signinScreen(),
     );
   }
 }
@@ -39,53 +43,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  _MyHomePageState() {
-    _initAlanButton();
-  }
-  void _initAlanButton() {
-    AlanVoice.addButton(
-        "f9f23d68d7018705d0f0fb27ee575e8a2e956eca572e1d8b807a3e2338fdd0dc/stage",
-        buttonAlign: AlanVoice.BUTTON_ALIGN_RIGHT,
-        bottomMargin: 10);
-    AlanVoice.onCommand.add((command) {
-      var commandName = command.data["commands"] ?? "";
-      switch (commandName) {
-        case 'home':
-          // Navigator.push(
-          //     context, MaterialPageRoute(builder: ((context) => Page_2())));
-          _incrementCounter();
-          break;
-        case 'notification':
-          Navigator.push(
-              context, MaterialPageRoute(builder: ((context) => Page_3())));
-          break;
-      }
-      if (commandName == "home") {
-        Navigator.push(
-            context, MaterialPageRoute(builder: ((context) => Page_2())));
-      }
-    });
-
-    AlanVoice.onEvent.add((event) {
-      debugPrint("got new event ${event.data.toString()}");
-    });
-
-    AlanVoice.onButtonState.add((state) {
-      debugPrint("got new button state ${state.name}");
-    });
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  void _activate() {
-    AlanVoice.activate();
-  }
-
   String _lastSelected = 'TAB: 0';
 
   void _selectedTab(int index) {
@@ -114,17 +71,11 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'You have pushed the button this many times:',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
           ],
         ),
       ),
       floatingActionButton: GestureDetector(
-        onTap: () {
-          _activate();
-        },
+        onTap: () {},
         child: Container(
           height: 55,
           width: 55,
