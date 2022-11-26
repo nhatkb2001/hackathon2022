@@ -6,7 +6,7 @@ class ImageAssets {
 
   // START FROM HERE
   static const String example_png = '$_pathPrefix/example_png.png';
-  static const String discountFood_png = '$_pathPrefix/main_home.png';
+  static const String homebg_png = '$_pathPrefix/main_home.png';
   
 
 }
