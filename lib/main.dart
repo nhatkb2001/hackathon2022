@@ -83,7 +83,8 @@ class _MyHomePageState extends State<MyHomePage> {
     'point',
     'are you',
     'your name',
-    'environment'
+    'environment',
+    'call you'
   ];
   List<String> audioUrls = [
     'https://audio.jukehost.co.uk/lh0kVoUpY0f5BYWG0HPL780i4I80gzpd', // Hello
@@ -165,6 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
           break;
         case 'are you':
         case 'your name':
+        case 'call you':
           playAudio(audioUrls[6]);
           break;
         case 'environment':
