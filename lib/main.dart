@@ -1,14 +1,22 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon2022/constants/colors.dart';
-import 'package:hackathon2022/views/main_home/widget/chanllenges_page.dart';
-import 'package:hackathon2022/views/screens/page_2.dart';
-import 'package:hackathon2022/views/screens/page_3.dart';
+import 'package:hackathon2022/firebase_options.dart';
+import 'package:hackathon2022/views/main_home/main_home_page.dart';
+import 'package:hackathon2022/views/screens/authentication/signIn.dart';
 import 'package:iconsax/iconsax.dart';
 
 import 'views/widgets/FABBottomBarNavigation.dart';
-import 'package:alan_voice/alan_voice.dart';
+import 'dart:ffi';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'speech_text_recognizer.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 
@@ -24,7 +32,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ChallengesPage(),
+      home: MyHomePage(
+        title: 'hi',
+      ),
     );
   }
 }
@@ -39,51 +49,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  _MyHomePageState() {
-    _initAlanButton();
-  }
-  void _initAlanButton() {
-    AlanVoice.addButton(
-        "f9f23d68d7018705d0f0fb27ee575e8a2e956eca572e1d8b807a3e2338fdd0dc/stage",
-        buttonAlign: AlanVoice.BUTTON_ALIGN_RIGHT,
-        bottomMargin: 10);
-    AlanVoice.onCommand.add((command) {
-      var commandName = command.data["commands"] ?? "";
-      switch (commandName) {
-        case 'home':
-          // Navigator.push(
-          //     context, MaterialPageRoute(builder: ((context) => Page_2())));
-          _incrementCounter();
-          break;
-        case 'notification':
-          Navigator.push(
-              context, MaterialPageRoute(builder: ((context) => Page_3())));
-          break;
-      }
-      if (commandName == "home") {
-        Navigator.push(
-            context, MaterialPageRoute(builder: ((context) => Page_2())));
-      }
-    });
-
-    AlanVoice.onEvent.add((event) {
-      debugPrint("got new event ${event.data.toString()}");
-    });
-
-    AlanVoice.onButtonState.add((state) {
-      debugPrint("got new button state ${state.name}");
-    });
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-
-
   String _lastSelected = 'TAB: 0';
 
   void _selectedTab(int index) {
@@ -96,6 +61,122 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _lastSelected = 'FAB: $index';
     });
+  }
+
+  String recognizedText = "Recognize text is";
+  bool isEnabled = false;
+
+  List<String> keyWords = [
+    'hello',
+    'hi',
+    'morning',
+    'afternoon',
+    'night',
+    'home',
+    'campaign',
+    'challenge',
+    'weather',
+    'oxygen',
+    'news',
+    'reward',
+    'point',
+    'are you',
+    'your name',
+    'environment',
+    'call you'
+  ];
+  List<String> audioUrls = [
+    'https://audio.jukehost.co.uk/lh0kVoUpY0f5BYWG0HPL780i4I80gzpd', // Hello
+    'https://audio.jukehost.co.uk/gn3vIz1e8L3df2Yj0ryhmYq1XKxRqmfo', // Command
+    'https://audio.jukehost.co.uk/FZ3uuu1psGYf3Lq2aZNAuXSM8khETFgM', // Null
+    'https://audio.jukehost.co.uk/6uTRQP9fxXk02a4krGheheyMgOX68Nxp', // Weather, oxygen
+    'https://audio.jukehost.co.uk/40lDo8Bx3Chcfv1kIyDbZmarwD8WLWua', // News
+    'https://audio.jukehost.co.uk/DFgm5v8jW3Cfi79qNheQxb1UBHw70gDl', // Reward
+    'https://audio.jukehost.co.uk/jGna2HrVKx3uni24QdJWRcEwtXlU7Dhl', // Who are you?
+    'https://audio.jukehost.co.uk/H5viVFxquTm1E8reawdDu9m3WZlHR3Kv', // Environment
+  ];
+
+  final audioPlayer = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkSpeechAvailability();
+  }
+
+  playAudio(item) {
+    audioPlayer.play(item);
+  }
+
+  _checkSpeechAvailability() async {
+    isEnabled = await SpeechTextRecognizer.initialize();
+    setState(() {});
+  }
+
+  _recognizedText() {
+    SpeechTextRecognizer.startListning(speechRecogListner);
+  }
+
+  void speechRecogListner(SpeechRecognitionResult result) {
+    print(result.recognizedWords);
+    //keyword value
+    recognizedText = result.recognizedWords;
+    String thisKeyWord = '';
+    for (int i = 0; i < keyWords.length; i++) {
+      if (recognizedText.toLowerCase().contains(keyWords[i])) {
+        thisKeyWord = keyWords[i];
+        break;
+      }
+    }
+    if (result.finalResult == true) {
+      switch (thisKeyWord) {
+        case 'hi':
+        case 'hello':
+        case 'morning':
+        case 'afternoon':
+        case 'night':
+          playAudio(audioUrls[0]);
+          break;
+        case 'home':
+          playAudio(audioUrls[1]);
+          //pushtoHome
+          break;
+        case 'campaign':
+          playAudio(audioUrls[1]);
+          //pushtoCampaign
+          break;
+        case 'challenge':
+          playAudio(audioUrls[1]);
+          //pushtoChallenge
+          break;
+        case 'weather':
+        case 'oxygen':
+          playAudio(audioUrls[3]);
+          //pushtoHome
+          break;
+        case 'news':
+          playAudio(audioUrls[4]);
+          //pushtoHome
+          break;
+        case 'point':
+        case 'reward':
+          playAudio(audioUrls[5]);
+          //pushtoChallenge
+          break;
+        case 'are you':
+        case 'your name':
+        case 'call you':
+          playAudio(audioUrls[6]);
+          break;
+        case 'environment':
+          playAudio(audioUrls[7]);
+          break;
+        default:
+          playAudio(audioUrls[2]);
+          break;
+      }
+    }
+    setState(() {});
   }
 
   @override
@@ -112,16 +193,14 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'You have pushed the button this many times:',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
           ],
         ),
       ),
       floatingActionButton: GestureDetector(
         onTap: () {
-          
+          SpeechTextRecognizer.isListning()
+              ? SpeechTextRecognizer.stopListning
+              : _recognizedText();
         },
         child: Container(
           height: 55,
