@@ -82,9 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _activate() {
-    AlanVoice.activate();
-  }
+
 
   String _lastSelected = 'TAB: 0';
 
@@ -123,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: GestureDetector(
         onTap: () {
-          _activate();
+          
         },
         child: Container(
           height: 55,
