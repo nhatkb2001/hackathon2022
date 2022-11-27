@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon2022/constants/colors.dart';
-import 'package:hackathon2022/views/main_home/main_home_page.dart';
+import 'package:hackathon2022/views/main_home/widget/chanllenges_page.dart';
 import 'package:hackathon2022/views/screens/page_2.dart';
 import 'package:hackathon2022/views/screens/page_3.dart';
 import 'package:iconsax/iconsax.dart';
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MainHomePage(),
+      home: const ChallengesPage(),
     );
   }
 }
